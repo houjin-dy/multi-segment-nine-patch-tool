@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>点九图批量制作工具</title>
+<link rel="stylesheet" href="style.css?v=20261105b">
+</head>
+<body>
+<div class="app">
+<div class="tb">
+<h1>点九图批量制作</h1>
+<button class="btn pri" id="bi">+ 导入图片</button>
+<button class="btn" id="bif">导入文件夹</button>
+<button class="btn" id="bcl">清空</button>
+<span class="sp"></span>
+<label class="chk"><input type="checkbox" id="cb43" checked><span>小艺4.3版本</span></label>
+<label class="chk"><input type="checkbox" id="cb50"><span>小艺5.0版本</span></label>
+<span class="ct" id="ct">共 0 张</span>
+<button class="btn pri" id="bea">导出全部 (.zip)</button>
+<button class="btn" id="bec">导出当前</button>
+</div>
+<div class="main">
+<div class="sb">
+<div class="sb-hd">图片列表</div>
+<div class="ilist" id="il"></div>
+</div>
+<div class="ed" id="ed">
+<div class="ed-tb">
+<div class="mg" id="modeGroup">
+<button class="mb ac" id="modeSingle">单段点九</button>
+<button class="mb" id="modeMulti">多段点九</button>
+</div>
+<span class="ml" id="editHint">拖拽线段调整拉伸区</span>
+<label class="chk" id="singleTools"><span>长度:</span><input type="range" id="slLen" min="1" max="40" value="5"><span id="slVal">5</span>px</label>
+<div class="multi-tools" id="multiTools">
+<button class="btn" id="addTop">+ 顶边段</button>
+<button class="btn" id="addLeft">+ 左边段</button>
+<button class="btn danger" id="removeSeg">删除选中段</button>
+</div>
+<span class="sep"></span>
+<button class="btn" id="bzi">+</button>
+<button class="btn" id="bzo">-</button>
+<button class="btn" id="bzf">适应</button>
+<span class="sp"></span>
+<button class="btn" id="bce">重置为默认</button>
+</div>
+<div class="vp" id="vp">
+<div class="cw" id="cw"><canvas id="mc"></canvas></div>
+<div class="lg">
+<div class="lg-i"><span class="lg-d st"></span>拉伸区 (可拖拽)</div>
+<div class="lg-i"><span class="lg-d pd"></span>内容区</div>
+</div>
+</div>
+</div>
+<div class="pp">
+<div class="pp-hd">拉伸预览</div>
+<div class="pp-bd" id="pb">
+<div class="pv-item"><div class="pv-label">宽度x2</div><canvas id="pcW"></canvas></div>
+<div class="pv-item"><div class="pv-label">高度x2</div><canvas id="pcH"></canvas></div>
+<div class="pv-item"><div class="pv-label">宽高x2</div><canvas id="pcWH"></canvas></div>
+<div class="pv-item"><div class="pv-label">自定义宽高</div><div class="pv-custom"><input type="number" id="pwc" min="1" max="4000"><span>x</span><input type="number" id="phc" min="1" max="4000"></div><canvas id="pcC"></canvas></div>
+</div>
+</div>
+</div>
+<div class="es" id="es" style="position:absolute;inset:0;display:none;pointer-events:none">
+<div class="title">还没有导入图片</div>
+<div class="hint">拖放图片到窗口，或点击导入图片，支持 PNG JPG WebP BMP</div>
+</div>
+</div>
+<div class="do" id="dz"><div class="bx"><div class="txt">释放以导入图片</div></div></div>
+<div class="po" id="po">
+<div class="bx"><div class="txt" id="ptx">正在导出...</div><div class="bar"><div class="fill" id="pfl"></div></div></div>
+</div>
+<div class="toast" id="to"></div>
+<input type="file" id="fi" accept="image/*" multiple style="display:none">
+<input type="file" id="fif" webkitdirectory multiple style="display:none">
+<script src="app.js?v=20261105b"></script>
+</body>
+</html>
