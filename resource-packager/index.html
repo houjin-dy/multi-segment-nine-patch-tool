@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>小艺 5.0 · 资源命名与打包</title>
+  <link rel="stylesheet" href="style.css?v=1">
+  <script defer src="spec.js?v=1"></script>
+  <script defer src="core.js?v=1"></script>
+  <script defer src="app.js?v=1"></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="../index.html"><span class="brand-icon">▦</span><span>小艺皮肤工具箱<small>RESOURCE WORKSPACE</small></span></a>
+    <nav><a href="../index.html">点九制作</a><span class="active">资源命名与打包</span></nav>
+    <a class="text-link" href="https://developer.huawei.com/consumer/cn/doc/content/keyboard_designguide_filesname-0000002801098965/" target="_blank" rel="noopener">官方命名规范 ↗</a>
+  </header>
+  <main>
+    <section class="intro"><div><div class="eyebrow">THEME STUDIO PRO · 小艺输入法 5.0</div><h1>素材就位，一键打包。</h1><p>用简单中文命名，拖入即可匹配用途，导出时自动转为标准英文名。</p></div><div class="local-label"><span></span>全部处理在本机完成</div></section>
+    <div class="workflow"><span><b>01</b> 上传素材</span><i>→</i><span><b>02</b> 匹配资源用途</span><i>→</i><span><b>03</b> 校验并导出 ZIP</span></div>
+    <details class="naming-guide panel" open><summary>中文名怎么写？这些简名可以直接匹配</summary><div class="name-examples"><span><code>a.png</code> A 键背景</span><span><code>a按下.png</code> A 键按压背景</span><span><code>7.png</code> 9 键数字 7 背景</span><span><code>删除图标.png</code> 删除图标</span><span><code>26键空格背景.png</code> 26 键空格背景</span><span><code>a前景.png</code> A 键前景第 1 层</span></div><p>按键省略类型时默认为背景，省略状态时默认为常规态。前景多层写“前景第1层”～“前景第4层”。“空格背景”等同名用途会提示选择模块。</p><p>简名是本工具的匹配规则。保留实际文件后缀，浅色 / 深色在上传前选择；右侧每个资源都可复制推荐中文名。<button id="downloadNames" class="link-button">下载全部中文命名表 ↓</button></p></details>
+    <div class="workspace">
+      <aside class="assets panel">
+        <div class="panel-title"><h2>素材库 <span id="assetCount">0</span></h2><button class="link-button" id="clearAssets">清空</button></div>
+        <div id="dropzone" class="dropzone" role="button" tabindex="0" aria-label="上传图片或视频"><div class="upload-symbol">↑</div><strong>拖入图片，或点击上传</strong><p>PNG · JPG · .9.PNG · WEBP · MP4</p><small>保留原图、透明度与动画</small></div>
+        <input id="files" type="file" multiple accept=".png,.jpg,.jpeg,.webp,.mp4" hidden>
+        <input id="folder" type="file" webkitdirectory multiple hidden>
+        <div class="upload-options"><button id="chooseFolder">导入文件夹</button><label>上传到 <select id="uploadMode"><option value="base">浅色 base</option><option value="dark">深色 dark</option></select></label></div>
+        <p class="hint">简易中文名和标准英文名自动匹配。文件夹路径包含 base / dark 时自动识别模式。点击素材后，可分配给一个或多个资源。</p>
+        <div class="asset-list" id="assetList"><div class="empty-assets">等待你的第一张素材<br><small>简易中文名或标准英文名自动匹配</small></div></div>
+      </aside>
+      <section class="catalog panel">
+        <div class="panel-title"><div class="modes"><button id="modeBase" class="selected">☀ 浅色 <span id="baseCount">0</span></button><button id="modeDark">◐ 深色 <span id="darkCount">0</span></button></div><button class="link-button" id="copyMode">浅色复用到深色</button></div>
+        <div class="catalog-top"><div><h2>资源用途</h2><p>内置 471 条规范，前景层展开为 909 个可选资源</p></div><button id="autoMatch">按文件名匹配</button></div>
+        <div class="filters"><input id="search" type="search" placeholder="搜索中文用途、按键或标准文件名…" aria-label="搜索资源"><select id="module" aria-label="模块"><option value="">全部模块</option></select><select id="kind" aria-label="资源类型"><option value="">全部类型</option></select><select id="state" aria-label="状态"><option value="">全部状态</option></select><select id="layer" aria-label="前景层"><option value="primary">前景仅第 1 层</option><option value="all">前景全部 4 层</option><option value="0">前景第 1 层</option><option value="1">前景第 2 层</option><option value="2">前景第 3 层</option><option value="3">前景第 4 层</option></select><select id="assignedFilter" aria-label="分配状态"><option value="">全部资源</option><option value="assigned">已分配</option><option value="empty">未分配</option><option value="invalid">需修正</option></select></div>
+        <div class="quick"><span>快捷选择</span><button data-preset="letters">26 字母背景</button><button data-preset="digits">9 键数字背景</button><button data-preset="icons">图标</button><button id="resetFilters">重置筛选</button></div>
+        <div class="selection-bar"><label><input id="selectVisible" type="checkbox"> 选择当前筛选结果</label><span id="selectedCount">已选 0 项</span><button id="assignMany" class="primary" disabled>将选中素材分配到资源</button><button id="clearSelection" class="link-button">取消选择</button></div>
+        <div id="resourceList" class="resource-list"></div>
+        <div class="pagination"><span id="resultCount"></span><div><button id="prevPage" aria-label="上一页">←</button><span id="pageLabel"></span><button id="nextPage" aria-label="下一页">→</button></div></div>
+      </section>
+    </div>
+    <section class="export-panel panel"><div><div class="eyebrow">READY TO IMPORT</div><h2 id="exportTitle">还没有分配资源</h2><p id="exportStatus">选择素材并分配用途后，生成 Theme Studio Pro 批量导入资源包。</p><p class="structure"><code>skins.zip</code> / <code>base/浅色资源</code> + <code>dark/深色资源</code></p></div><div class="export-actions"><label>压缩包名称 <input id="zipName" value="skins" aria-label="压缩包名称"><span>.zip</span></label><div><button id="review">查看打包清单</button><button id="exportZip" class="primary" disabled>下载资源 ZIP ↓</button></div></div></section>
+    <details class="help panel"><summary>怎么使用？命名、校验和导入说明</summary><div><p>1. 上传前可按上方简名示例命名，例如“a按下.png”“删除图标.png”“通用字母背景.9.png”。字母 a～z 默认为 26 键背景，数字 0～9 默认为 9 键背景；其他按键建议加模块，如“26键空格背景.png”。默认是常规态，“按下 / 按压 / 按压态”均指按压态，“选中”指选中态。不同模块同名时会显示候选用途，不自动选中其中一个。标准英文名及原先完整中文名仍支持。</p><p>2. 同一张素材可用于多个资源：筛选模块、类型、状态，勾选目标项，批量分配。简名前景写“a前景”“a前景第2层”“a前景第4层按下”，第 1～4 层对应标准文件名中的 0～3；旧完整中文名末尾编号仍为 0～3。深浅色独立分配，复用仅填充另一模式的空位。</p><p>3. 分辨率按表格的“最大分辨率”校验，小于上限允许导出。超出尺寸、格式或大小限制的资源须先处理；本页只重命名，绝不把普通 PNG 改后缀伪装成点九，也不缩放点九边线或重编码动画。</p><p>4. ZIP 根目录直接包含 base 和 dark，所有资源位于其下，不再嵌套主题名或模块文件夹。未分配的素材不会打包，空模式保留目录；可按需要制作部分换肤项，无需凑齐全部资源。</p><p>5. 在 Theme Studio Pro 新建 / 打开“小艺输入法皮肤”作品，使用批量导入资源功能上传此 ZIP，再在工具内完成其他配置和预览自测。本包是图片 / 视频资源包，不是完整主题工程或上架成品。</p><p>来源：用户提供的《小艺输入法5.0资源文件规范.xlsx》“规范要求”工作表，471 条；目录结构依据上方华为官方命名规范。点九尺寸以含 1px 边线的文件总尺寸保守校验。</p></div></details>
+    <footer>小艺皮肤工具箱 <span>本地重命名 · 原始文件无损打包</span></footer>
+  </main>
+  <dialog id="reviewDialog"><div class="dialog-head"><h2>打包清单</h2><button id="closeReview" aria-label="关闭">×</button></div><p>逐项检查目标路径与校验结果。</p><div id="reviewList"></div></dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

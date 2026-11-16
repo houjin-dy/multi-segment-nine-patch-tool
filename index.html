@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>点九图批量制作工具</title>
-<link rel="stylesheet" href="style.css?v=20261105b">
+<link rel="stylesheet" href="style.css?v=20261116">
 </head>
 <body>
 <div class="app">
 <div class="tb">
 <h1>点九图批量制作</h1>
+<a class="btn" href="resource-packager/index.html" style="text-decoration:none">资源命名与打包 ↗</a>
 <button class="btn pri" id="bi">+ 导入图片</button>
 <button class="btn" id="bif">导入文件夹</button>
 <button class="btn" id="bcl">清空</button>
@@ -31,7 +32,7 @@
 <button class="mb" id="modeMulti">多段点九</button>
 </div>
 <span class="ml" id="editHint">拖拽线段调整拉伸区</span>
-<label class="chk" id="singleTools"><span>长度:</span><input type="range" id="slLen" min="1" max="40" value="5"><span id="slVal">5</span>px</label>
+<label class="chk" id="singleTools"><span>联动长度:</span><input type="range" id="slLen" min="1" max="40" value="5"><span id="slVal">5</span>px</label>
 <div class="multi-tools" id="multiTools">
 <button class="btn" id="addTop">+ 顶边段</button>
 <button class="btn" id="addLeft">+ 左边段</button>
@@ -44,6 +45,7 @@
 <span class="sp"></span>
 <button class="btn" id="bce">重置为默认</button>
 </div>
+<div class="single-ranges" id="singleRanges"><span>单段范围（从第 1 像素起）</span><label>顶边 <input id="topStart" type="number" min="1" aria-label="顶边起点"> ～ <input id="topEnd" type="number" min="1" aria-label="顶边终点"></label><label>左边 <input id="leftStart" type="number" min="1" aria-label="左边起点"> ～ <input id="leftEnd" type="number" min="1" aria-label="左边终点"></label><span>两个方向可分别设置</span></div>
 <div class="vp" id="vp">
 <div class="cw" id="cw"><canvas id="mc"></canvas></div>
 <div class="lg">
@@ -54,11 +56,14 @@
 </div>
 <div class="pp">
 <div class="pp-hd">拉伸预览</div>
+<div class="pv-options"><label>背景 <select id="pvBackground"><option value="checker">棋盘</option><option value="#18181c">深灰</option><option value="#000000">纯黑</option><option value="#ffffff">纯白</option></select></label><label><input id="pvSmooth" type="checkbox" checked> 平滑采样</label><label><input id="pvContent" type="checkbox"> 内容区辅助线</label></div>
+<p class="pv-info" id="previewInfo">导入原图或已有的 .9.png，按实际像素查看</p>
 <div class="pp-bd" id="pb">
-<div class="pv-item"><div class="pv-label">宽度x2</div><canvas id="pcW"></canvas></div>
-<div class="pv-item"><div class="pv-label">高度x2</div><canvas id="pcH"></canvas></div>
-<div class="pv-item"><div class="pv-label">宽高x2</div><canvas id="pcWH"></canvas></div>
-<div class="pv-item"><div class="pv-label">自定义宽高</div><div class="pv-custom"><input type="number" id="pwc" min="1" max="4000"><span>x</span><input type="number" id="phc" min="1" max="4000"></div><canvas id="pcC"></canvas></div>
+<div class="pv-item"><div class="pv-label">横屏模拟 · 加宽并降低高度</div><div class="pv-size"></div><div class="pv-stage"><canvas id="pcL" tabindex="0" aria-label="放大横屏模拟预览"></canvas></div><p class="pv-info">宽 ×3 / 高 ×0.65；非手机实测尺寸</p></div>
+<div class="pv-item"><div class="pv-label">自定义宽高</div><div class="pv-custom"><input type="number" id="pwc" min="1" max="4000" aria-label="预览宽度"><span>×</span><input type="number" id="phc" min="1" max="4000" aria-label="预览高度"><button class="btn" id="landscapeSize">填入横屏模拟尺寸</button></div><div class="pv-size"></div><div class="pv-stage"><canvas id="pcC" tabindex="0" aria-label="放大自定义预览"></canvas></div><p class="pv-warning" id="previewWarning" role="status"></p></div>
+<div class="pv-item"><div class="pv-label">宽度 ×2</div><div class="pv-size"></div><div class="pv-stage"><canvas id="pcW" tabindex="0" aria-label="放大宽度双倍预览"></canvas></div></div>
+<div class="pv-item"><div class="pv-label">高度 ×2</div><div class="pv-size"></div><div class="pv-stage"><canvas id="pcH" tabindex="0" aria-label="放大高度双倍预览"></canvas></div></div>
+<div class="pv-item"><div class="pv-label">宽高 ×2</div><div class="pv-size"></div><div class="pv-stage"><canvas id="pcWH" tabindex="0" aria-label="放大宽高双倍预览"></canvas></div></div>
 </div>
 </div>
 </div>
@@ -74,6 +79,8 @@
 <div class="toast" id="to"></div>
 <input type="file" id="fi" accept="image/*" multiple style="display:none">
 <input type="file" id="fif" webkitdirectory multiple style="display:none">
-<script src="app.js?v=20261105b"></script>
+<dialog id="pvDialog"><div class="pv-dialog-head"><strong id="pvLargeTitle">原尺寸预览</strong><label>查看倍率 <select id="pvLargeScale"><option value="1">100%</option><option value="2">200% 像素检查</option><option value="4">400% 像素检查</option></select></label><button class="btn" id="pvClose">关闭</button></div><p class="pv-info">查看倍率仅放大显示；拉伸尺寸保持不变。手机像素密度和渲染方式可能不同，请以实际设备效果复核。</p><p class="pv-warning" id="pvLargeWarning"></p><div class="pv-large-stage"><canvas id="pvLarge"></canvas></div></dialog>
+<script src="nine-patch-preview.js?v=20261116"></script>
+<script src="app.js?v=20261116"></script>
 </body>
 </html>

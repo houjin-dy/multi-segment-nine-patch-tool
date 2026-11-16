@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { extname, resolve } from 'node:path';
+import { extname, resolve, sep } from 'node:path';
 
 const root = resolve(import.meta.dirname);
 const port = 8765;
@@ -19,7 +19,7 @@ createServer(async (request, response) => {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
     const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\/+/, '');
     const file = resolve(root, relative);
-    if (!file.startsWith(root)) throw new Error('Invalid path');
+    if (!file.startsWith(root + sep) || relative.split(/[\\/]/).some(part => part.startsWith('.'))) throw new Error('Invalid path');
     const body = await readFile(file);
     response.writeHead(200, {
       'Content-Type': types[extname(file).toLowerCase()] || 'application/octet-stream',
